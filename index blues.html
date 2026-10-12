@@ -1,0 +1,1676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>London SMC Signals | Smart Money Forex – London Session Only</title>
+  <meta name="description" content="Forex signals and educational toolkit based on Smart Money Concepts (SMC) exclusively for the London session. Asian range liquidity sweeps, Order Blocks, FVGs, BOS & CHOCH." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #070b14;
+      --bg-card: #0f1523;
+      --bg-elevated: #161e2e;
+      --border: #1c2740;
+      --text: #f0f4fc;
+      --text-muted: #8b9cb8;
+      --accent: #4f8cff;
+      --accent-hover: #3b7af0;
+      --green: #22c55e;
+      --red: #ef4444;
+      --amber: #f59e0b;
+      --purple: #a78bfa;
+      --cyan: #22d3ee;
+      --card-shadow: 0 4px 24px rgba(0,0,0,0.25);
+      --radius: 18px;
+      --header-height: 70px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: var(--header-height);
+    }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+      min-height: 100vh;
+      background-image: 
+        radial-gradient(ellipse 80% 50% at 50% -20%, rgba(79, 140, 255, 0.12), transparent),
+        radial-gradient(ellipse 60% 40% at 100% 100%, rgba(167, 139, 250, 0.06), transparent);
+    }
+
+    .container {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 0 1.25rem;
+    }
+
+    /* Header */
+    header {
+      background: rgba(7, 11, 20, 0.85);
+      backdrop-filter: blur(16px) saturate(180%);
+      -webkit-backdrop-filter: blur(16px) saturate(180%);
+      border-bottom: 1px solid rgba(28, 39, 64, 0.8);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      height: var(--header-height);
+    }
+
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.9rem 0;
+      gap: 1rem;
+      flex-wrap: wrap;
+      height: 100%;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      font-weight: 800;
+      font-size: 1.2rem;
+      letter-spacing: -0.03em;
+      text-decoration: none;
+      color: var(--text);
+    }
+
+    .logo-icon {
+      width: 38px;
+      height: 38px;
+      background: linear-gradient(135deg, #4f8cff, #a78bfa);
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      font-size: 1.15rem;
+      box-shadow: 0 4px 14px rgba(79, 140, 255, 0.35);
+    }
+
+    nav {
+      display: flex;
+      gap: 0.25rem;
+      flex-wrap: wrap;
+    }
+
+    nav a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.875rem;
+      padding: 0.4rem 0.8rem;
+      border-radius: 999px;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+
+    nav a:hover {
+      color: var(--text);
+      background: rgba(79, 140, 255, 0.1);
+    }
+
+    nav a.active {
+      color: var(--accent);
+      background: rgba(79, 140, 255, 0.15);
+      font-weight: 600;
+    }
+
+    /* Hero / Status */
+    .hero {
+      padding: 3.5rem 0 2.5rem;
+      text-align: center;
+    }
+
+    .hero h1 {
+      font-size: clamp(1.9rem, 4.5vw, 2.9rem);
+      font-weight: 800;
+      letter-spacing: -0.035em;
+      margin-bottom: 0.85rem;
+      background: linear-gradient(135deg, #ffffff 20%, #94a3b8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero p {
+      color: var(--text-muted);
+      font-size: 1.1rem;
+      max-width: 580px;
+      margin: 0 auto 2.25rem;
+      line-height: 1.7;
+    }
+
+    .status-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .status-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.35rem 1.4rem;
+      text-align: left;
+      box-shadow: var(--card-shadow);
+      transition: border-color 0.25s ease, transform 0.2s ease;
+    }
+
+    .status-card:hover {
+      border-color: rgba(79, 140, 255, 0.35);
+      transform: translateY(-2px);
+    }
+
+    .status-card .label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: 0.4rem;
+      font-weight: 600;
+    }
+
+    .status-card .value {
+      font-size: 1.45rem;
+      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+      letter-spacing: -0.02em;
+    }
+
+    .status-card .sub {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-top: 0.3rem;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.3rem 0.8rem;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 600;
+    }
+
+    .badge-live {
+      background: rgba(34, 197, 94, 0.12);
+      color: var(--green);
+      border: 1px solid rgba(34, 197, 94, 0.2);
+    }
+
+    .badge-closed {
+      background: rgba(239, 68, 68, 0.1);
+      color: var(--red);
+      border: 1px solid rgba(239, 68, 68, 0.18);
+    }
+
+    .badge-kill {
+      background: rgba(245, 158, 11, 0.12);
+      color: var(--amber);
+      border: 1px solid rgba(245, 158, 11, 0.22);
+    }
+
+    .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: currentColor;
+      animation: pulse 1.6s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.45; transform: scale(0.85); }
+    }
+
+    /* Sections */
+    section {
+      padding: 3.25rem 0;
+      scroll-margin-top: var(--header-height);
+    }
+
+    .section-title {
+      font-size: 1.55rem;
+      font-weight: 750;
+      margin-bottom: 0.45rem;
+      letter-spacing: -0.025em;
+    }
+
+    .section-sub {
+      color: var(--text-muted);
+      margin-bottom: 1.85rem;
+      max-width: 580px;
+      font-size: 0.98rem;
+    }
+
+    /* Strategy Steps */
+    .steps {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 1.3rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem 1.6rem;
+      transition: all 0.25s ease;
+      box-shadow: var(--card-shadow);
+    }
+
+    .step:hover {
+      border-color: rgba(79, 140, 255, 0.4);
+      transform: translateY(-2px);
+    }
+
+    .step-num {
+      width: 42px;
+      height: 42px;
+      border-radius: 13px;
+      background: linear-gradient(135deg, #4f8cff, #a78bfa);
+      display: grid;
+      place-items: center;
+      font-weight: 700;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+      box-shadow: 0 4px 12px rgba(79, 140, 255, 0.3);
+    }
+
+    .step h3 {
+      font-size: 1.1rem;
+      margin-bottom: 0.35rem;
+      font-weight: 650;
+    }
+
+    .step p {
+      color: var(--text-muted);
+      font-size: 0.94rem;
+    }
+
+    .step ul {
+      margin-top: 0.75rem;
+      padding-left: 1.25rem;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    .step li {
+      margin-bottom: 0.3rem;
+    }
+
+    /* Signal Tool */
+    .tool-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 1.85rem;
+      box-shadow: var(--card-shadow);
+    }
+
+    .tool-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.35rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 550;
+      color: var(--text-muted);
+      margin-bottom: 0.4rem;
+      letter-spacing: 0.01em;
+    }
+
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 0.8rem 1rem;
+      color: var(--text);
+      font-size: 0.95rem;
+      font-family: 'JetBrains Mono', monospace;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(79, 140, 255, 0.15);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      background: linear-gradient(135deg, #4f8cff, #3b7af0);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 0.85rem 1.6rem;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 14px rgba(79, 140, 255, 0.25);
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 18px rgba(79, 140, 255, 0.35);
+    }
+
+    .btn:active {
+      transform: scale(0.98);
+    }
+
+    .btn-secondary {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      color: var(--text);
+      box-shadow: none;
+    }
+
+    .btn-secondary:hover {
+      background: var(--border);
+      box-shadow: none;
+      transform: none;
+    }
+
+    .result-box {
+      margin-top: 1.5rem;
+      padding: 1.5rem;
+      border-radius: 16px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      display: none;
+    }
+
+    .result-box.visible {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .result-box h4 {
+      margin-bottom: 0.85rem;
+      font-size: 1.1rem;
+    }
+
+    .result-box .signal {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 0.4rem;
+    }
+
+    .signal-long { color: var(--green); }
+    .signal-short { color: var(--red); }
+    .signal-wait { color: var(--amber); }
+
+    /* Concepts */
+    .concepts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+    }
+
+    .concept-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.35rem 1.45rem;
+      transition: all 0.25s ease;
+      box-shadow: var(--card-shadow);
+    }
+
+    .concept-card:hover {
+      border-color: rgba(79, 140, 255, 0.3);
+      transform: translateY(-2px);
+    }
+
+    .concept-card h3 {
+      font-size: 1rem;
+      margin-bottom: 0.4rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .concept-card p {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    /* Chart */
+    .chart-wrapper {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      height: 520px;
+      box-shadow: var(--card-shadow);
+    }
+
+    /* Pairs */
+    .pairs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+      margin-bottom: 1.35rem;
+    }
+
+    .pair-btn {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 0.45rem 1rem;
+      border-radius: 999px;
+      font-weight: 550;
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .pair-btn.active,
+    .pair-btn:hover {
+      background: rgba(79, 140, 255, 0.12);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* Disclaimer */
+    .disclaimer {
+      background: rgba(239, 68, 68, 0.08);
+      border: 1px solid rgba(239, 68, 68, 0.25);
+      border-radius: 14px;
+      padding: 1.25rem 1.5rem;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .disclaimer strong {
+      color: var(--red);
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem 0;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+
+    /* Utility */
+    .mt-2 { margin-top: 0.5rem; }
+    .mt-4 { margin-top: 1rem; }
+    .text-green { color: var(--green); }
+    .text-red { color: var(--red); }
+    .text-amber { color: var(--amber); }
+
+    @media (max-width: 640px) {
+      .step {
+        grid-template-columns: 1fr;
+      }
+      .status-card .value {
+        font-size: 1.25rem;
+      }
+      nav a {
+        font-size: 0.8rem;
+        padding: 0.35rem 0.65rem;
+      }
+      :root {
+        --header-height: 90px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container header-inner">
+      <a href="#status" class="logo">
+        <div class="logo-icon">🌲</div>
+        <span>London SMC</span>
+      </a>
+      <nav id="main-nav">
+        <a href="#status" data-section="status">Session</a>
+        <a href="#prices" data-section="prices">Live Rates</a>
+        <a href="#asian-range" data-section="asian-range">Asian Range</a>
+        <a href="#strategy" data-section="strategy">Strategy</a>
+        <a href="#tool" data-section="tool">Signal Tool</a>
+        <a href="#concepts" data-section="concepts">Concepts</a>
+        <a href="#chart" data-section="chart">Chart</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero / Session Status -->
+    <section class="hero" id="status">
+      <div class="container">
+        <h1>Forex Signals by Smart Money Concepts</h1>
+        <p>London Session only. Trade institutional footprints — liquidity sweeps of the Asian range, Order Blocks, Fair Value Gaps and structure shifts.</p>
+
+        <div class="status-grid">
+          <div class="status-card">
+            <div class="label">London Time</div>
+            <div class="value" id="london-time">--:--:--</div>
+            <div class="sub" id="london-date">—</div>
+          </div>
+          <div class="status-card">
+            <div class="label">Session Status</div>
+            <div class="value" id="session-status">
+              <span class="badge badge-closed"><span class="dot"></span> Loading…</span>
+            </div>
+            <div class="sub" id="session-window">London: 08:00 – 16:00</div>
+          </div>
+          <div class="status-card">
+            <div class="label">Kill Zone</div>
+            <div class="value" id="killzone-status">
+              <span class="badge badge-closed">—</span>
+            </div>
+            <div class="sub" id="killzone-countdown">Open 07:00 – 10:00 London</div>
+          </div>
+          <div class="status-card">
+            <div class="label">Next Event</div>
+            <div class="value" id="next-event" style="font-size:1.15rem;">—</div>
+            <div class="sub" id="next-event-sub">—</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Live Rates (API) -->
+    <section id="prices">
+      <div class="container">
+        <h2 class="section-title">Live Reference Rates</h2>
+        <p class="section-sub">
+          Live mid-market rates powered by <strong>Twelve Data</strong> API. 
+          Updates every 15 seconds for near real-time prices. Falls back to daily reference rates if the live feed is unavailable.
+        </p>
+
+        <div class="status-grid" id="rates-grid">
+          <div class="status-card">
+            <div class="label">EUR/USD</div>
+            <div class="value" id="rate-eurusd">—</div>
+            <div class="sub">Loading…</div>
+          </div>
+          <div class="status-card">
+            <div class="label">GBP/USD</div>
+            <div class="value" id="rate-gbpusd">—</div>
+            <div class="sub">Loading…</div>
+          </div>
+          <div class="status-card">
+            <div class="label">USD/JPY</div>
+            <div class="value" id="rate-usdjpy">—</div>
+            <div class="sub">Loading…</div>
+          </div>
+          <div class="status-card">
+            <div class="label">XAU/USD</div>
+            <div class="value" id="rate-xauusd">—</div>
+            <div class="sub">Gold</div>
+          </div>
+          <div class="status-card">
+            <div class="label">Data Source</div>
+            <div class="value" style="font-size:1rem;" id="rate-source">Twelve Data</div>
+            <div class="sub" id="rate-date">—</div>
+          </div>
+        </div>
+
+        <!-- Live Price Chart -->
+        <div class="tool-card" style="margin-top:1.5rem;">
+          <div style="display:flex; flex-wrap:wrap; gap:0.75rem; align-items:center; margin-bottom:1rem;">
+            <h3 style="font-size:1.1rem; margin:0;">Live Price Chart</h3>
+            <select id="chart-pair-select" onchange="switchLiveChart()" style="background:var(--bg-elevated); border:1px solid var(--border); color:var(--text); padding:0.4rem 0.75rem; border-radius:8px; font-size:0.9rem;">
+              <option value="EUR/USD">EUR/USD</option>
+              <option value="GBP/USD">GBP/USD</option>
+              <option value="USD/JPY">USD/JPY</option>
+              <option value="XAU/USD">XAU/USD</option>
+            </select>
+            <span id="live-chart-price" style="font-family:'JetBrains Mono',monospace; font-weight:700; color:var(--cyan);"></span>
+          </div>
+          <div style="position:relative; height:280px;">
+            <canvas id="livePriceChart"></canvas>
+          </div>
+          <p style="font-size:0.8rem; color:var(--text-muted); margin-top:0.75rem;">Updates every 15 seconds · Shows last ~40 data points</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Asian Range Auto Detection -->
+    <section id="asian-range">
+      <div class="container">
+        <h2 class="section-title">Asian Session Range (Auto)</h2>
+        <p class="section-sub">
+          Automatically calculated from recent 15-minute candles using your Twelve Data key.  
+          Asian session defined as <strong>00:00 – 08:00 London time</strong>.
+        </p>
+
+        <div class="status-grid" id="asian-grid">
+          <div class="status-card">
+            <div class="label">Pair</div>
+            <div class="value" style="font-size:1.1rem;" id="asian-pair">EUR/USD</div>
+            <div class="sub">
+              <select id="asian-pair-select" onchange="loadAsianRange()" style="background:var(--bg-elevated); border:1px solid var(--border); color:var(--text); padding:0.3rem 0.6rem; border-radius:6px; font-size:0.85rem;">
+                <option value="EUR/USD">EUR/USD</option>
+                <option value="GBP/USD">GBP/USD</option>
+                <option value="USD/JPY">USD/JPY</option>
+                <option value="GBP/JPY">GBP/JPY</option>
+                <option value="XAU/USD">XAU/USD</option>
+              </select>
+            </div>
+          </div>
+          <div class="status-card">
+            <div class="label">Asian High</div>
+            <div class="value" id="asian-high">—</div>
+            <div class="sub" id="asian-high-time">—</div>
+          </div>
+          <div class="status-card">
+            <div class="label">Asian Low</div>
+            <div class="value" id="asian-low">—</div>
+            <div class="sub" id="asian-low-time">—</div>
+          </div>
+          <div class="status-card">
+            <div class="label">Range Size</div>
+            <div class="value" id="asian-range-size">—</div>
+            <div class="sub" id="asian-status">Calculating…</div>
+          </div>
+        </div>
+
+        <div style="margin-top:1.25rem; display:flex; gap:0.75rem; flex-wrap:wrap;">
+          <button class="btn" onclick="loadAsianRange()">Refresh Asian Range</button>
+          <button class="btn btn-secondary" onclick="fillSignalTool()">Use these levels in Signal Tool</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Strategy -->
+    <section id="strategy">
+      <div class="container">
+        <h2 class="section-title">London Session SMC Playbook</h2>
+        <p class="section-sub">A repeatable, rules-based process used by many SMC traders during the highest-volume European window.</p>
+
+        <div class="steps">
+          <div class="step">
+            <div class="step-num">1</div>
+            <div>
+              <h3>Mark the Asian Range (Liquidity Map)</h3>
+              <p>Before London opens, identify the high and low of the Asian session (typically 00:00–08:00 London / 19:00–03:00 NY previous day). These levels hold the majority of resting stop orders.</p>
+              <ul>
+                <li>Equal highs / equal lows = strongest liquidity pools</li>
+                <li>Previous day high & low also matter</li>
+                <li>Higher-timeframe bias (4H / Daily) filters direction</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="step-num">2</div>
+            <div>
+              <h3>Wait for the London Open Liquidity Sweep</h3>
+              <p>In the first 60–90 minutes after London open (especially the Kill Zone 07:00–10:00), price frequently raids one side of the Asian range — the “Judas swing” or stop hunt.</p>
+              <ul>
+                <li>Sweep of Asian low → potential bullish reversal</li>
+                <li>Sweep of Asian high → potential bearish reversal</li>
+                <li>Look for aggressive displacement away from the swept level</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="step-num">3</div>
+            <div>
+              <h3>Confirm with Structure Shift + Imbalance</h3>
+              <p>Do not enter on the sweep alone. Wait for clear evidence that smart money has reversed intent.</p>
+              <ul>
+                <li>Market Structure Shift (MSS / CHOCH) on 5m or 15m</li>
+                <li>Break of Structure (BOS) in the new direction</li>
+                <li>Fair Value Gap (FVG) or Order Block created by the displacement</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="step-num">4</div>
+            <div>
+              <h3>Enter, Manage Risk, Target Opposite Liquidity</h3>
+              <p>Enter on the retest of the FVG or Order Block. Stop goes beyond the sweep extreme. First target is often the opposite side of the Asian range or next HTF liquidity.</p>
+              <ul>
+                <li>Risk 0.5–1% per trade maximum</li>
+                <li>Partial profits at 1:2 / 1:3 R:R</li>
+                <li>Trail or hold runners into New York if bias aligns</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive Tool -->
+    <section id="tool">
+      <div class="container">
+        <h2 class="section-title">London SMC Signal Checklist</h2>
+        <p class="section-sub">Fill in the levels you see on your chart. The tool helps you stay disciplined and only take high-probability setups.</p>
+
+        <div class="tool-card">
+          <div class="tool-grid">
+            <div class="form-group">
+              <label>Pair</label>
+              <select id="pair" onchange="updatePairPriceHint()">
+                <option value="EURUSD">EUR/USD</option>
+                <option value="GBPUSD">GBP/USD</option>
+                <option value="USDJPY">USD/JPY</option>
+                <option value="GBPJPY">GBP/JPY</option>
+                <option value="XAUUSD">XAU/USD (Gold)</option>
+                <option value="OTHER">Other</option>
+              </select>
+              <div class="sub" id="pair-price-hint" style="margin-top:0.35rem; font-size:0.8rem; color:var(--text-muted);"></div>
+            </div>
+            <div class="form-group">
+              <label>Higher Timeframe Bias</label>
+              <select id="bias">
+                <option value="bullish">Bullish</option>
+                <option value="bearish">Bearish</option>
+                <option value="neutral">Neutral / Unclear</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Asian Session High</label>
+              <input type="number" id="asia-high" step="0.00001" placeholder="e.g. 1.08520">
+            </div>
+            <div class="form-group">
+              <label>Asian Session Low</label>
+              <input type="number" id="asia-low" step="0.00001" placeholder="e.g. 1.08150">
+            </div>
+            <div class="form-group">
+              <label>Has price swept one side?</label>
+              <select id="swept">
+                <option value="none">Not yet</option>
+                <option value="low">Swept Asian Low</option>
+                <option value="high">Swept Asian High</option>
+                <option value="both">Swept both sides</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Structure confirmation after sweep?</label>
+              <select id="confirm">
+                <option value="none">None yet</option>
+                <option value="mss">MSS / CHOCH seen</option>
+                <option value="bos">BOS + FVG / OB</option>
+                <option value="strong">Strong displacement + FVG + OB</option>
+              </select>
+            </div>
+          </div>
+
+          <div style="display:flex; gap:0.75rem; flex-wrap:wrap;">
+            <button class="btn" onclick="generateSignal()">Generate Signal Assessment</button>
+            <button class="btn btn-secondary" onclick="resetTool()">Reset</button>
+            <button class="btn btn-secondary" id="copy-btn" onclick="copySignal()" style="display:none;">Copy Signal</button>
+          </div>
+
+          <div class="result-box" id="result">
+            <h4>Signal Assessment</h4>
+            <div id="result-both" style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1rem;">
+              <div style="background:rgba(16,185,129,0.08); border:1px solid rgba(16,185,129,0.25); border-radius:12px; padding:1rem;">
+                <div style="font-weight:700; color:var(--green); margin-bottom:0.4rem;">BUY / LONG</div>
+                <div class="signal" id="result-long" style="font-size:1.1rem;">—</div>
+                <div id="result-long-detail" style="font-size:0.85rem; color:var(--text-muted); margin-top:0.4rem;"></div>
+              </div>
+              <div style="background:rgba(239,68,68,0.08); border:1px solid rgba(239,68,68,0.25); border-radius:12px; padding:1rem;">
+                <div style="font-weight:700; color:var(--red); margin-bottom:0.4rem;">SELL / SHORT</div>
+                <div class="signal" id="result-short" style="font-size:1.1rem;">—</div>
+                <div id="result-short-detail" style="font-size:0.85rem; color:var(--text-muted); margin-top:0.4rem;"></div>
+              </div>
+            </div>
+            <div id="result-detail" style="color:var(--text-muted); font-size:0.95rem;"></div>
+            <div id="copy-feedback" style="display:none; margin-top:0.75rem; color:var(--green); font-size:0.9rem;">✓ Signal copied to clipboard</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Concepts -->
+    <section id="concepts">
+      <div class="container">
+        <h2 class="section-title">Core SMC Concepts</h2>
+        <p class="section-sub">Quick reference for the language used in this system.</p>
+
+        <div class="concepts-grid">
+          <div class="concept-card">
+            <h3>📍 Order Block (OB)</h3>
+            <p>The last opposing candle before a strong impulsive move. Institutions often leave orders here. Price frequently returns to the OB for entry.</p>
+          </div>
+          <div class="concept-card">
+            <h3>⚡ Fair Value Gap (FVG)</h3>
+            <p>A three-candle imbalance where price moved so fast that a gap remains. Price often revisits the FVG to “fill” it before continuing.</p>
+          </div>
+          <div class="concept-card">
+            <h3>🔄 Liquidity Sweep</h3>
+            <p>Price briefly trades beyond equal highs/lows or session extremes to trigger stops, then reverses. The classic London open move against the Asian range.</p>
+          </div>
+          <div class="concept-card">
+            <h3>📈 BOS / CHOCH</h3>
+            <p><strong>Break of Structure</strong> continues the current trend. <strong>Change of Character</strong> (MSS) signals a potential reversal of the immediate structure.</p>
+          </div>
+          <div class="concept-card">
+            <h3>🕰️ Kill Zone</h3>
+            <p>High-probability window when institutions are most active. London Kill Zone ≈ 07:00–10:00 London time. Most clean sweeps and displacements occur here.</p>
+          </div>
+          <div class="concept-card">
+            <h3>🎯 Premium / Discount</h3>
+            <p>In a dealing range, the upper half is premium (sell zone), lower half is discount (buy zone). Prefer entries in the direction of HTF bias inside the correct half.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Chart -->
+    <section id="chart">
+      <div class="container">
+        <h2 class="section-title">Live Chart</h2>
+        <p class="section-sub">Switch pairs and analyse the Asian range + London open on your preferred timeframe (5m / 15m recommended).</p>
+
+        <div class="pairs">
+          <button class="pair-btn active" data-symbol="FX:EURUSD">EURUSD</button>
+          <button class="pair-btn" data-symbol="FX:GBPUSD">GBPUSD</button>
+          <button class="pair-btn" data-symbol="FX:USDJPY">USDJPY</button>
+          <button class="pair-btn" data-symbol="FX:GBPJPY">GBPJPY</button>
+          <button class="pair-btn" data-symbol="OANDA:XAUUSD">XAUUSD</button>
+        </div>
+
+        <div style="display:flex; flex-wrap:wrap; gap:0.75rem; align-items:center; margin-bottom:1rem;">
+          <span style="font-size:0.85rem; color:var(--text-muted);">Chart Timezone:</span>
+          <button class="pair-btn tz-btn active" data-tz="Europe/London">London</button>
+          <button class="pair-btn tz-btn" data-tz="America/New_York">New York</button>
+          <button class="pair-btn tz-btn" data-tz="UTC">UTC</button>
+          <button class="pair-btn tz-btn" data-tz="exchange">Exchange</button>
+          <span id="current-tz-label" style="font-size:0.85rem; color:var(--cyan); margin-left:0.5rem;">Europe/London</span>
+        </div>
+
+        <div class="chart-wrapper">
+          <div id="tradingview-widget" style="height:100%;"></div>
+        </div>
+
+        <!-- Session Boxes Instructions -->
+        <div class="tool-card" style="margin-top:1.5rem;">
+          <h3 style="font-size:1.1rem; margin-bottom:0.75rem;">How to add Asia / London / New York Session Boxes</h3>
+          <p style="color:var(--text-muted); font-size:0.95rem; margin-bottom:1rem;">
+            The free chart widget cannot load custom Pine scripts automatically.  
+            Follow these steps (takes ~20 seconds) to get proper session highlighting:
+          </p>
+
+          <ol style="padding-left:1.4rem; color:var(--text-muted); font-size:0.95rem; line-height:1.7;">
+            <li>Click the <strong>fullscreen</strong> button on the chart (or open the same symbol on TradingView.com).</li>
+            <li>Click <strong>Indicators</strong> at the top.</li>
+            <li>Search for one of these free indicators and click it:</li>
+          </ol>
+
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:1rem; margin:1.25rem 0;">
+            <a href="https://www.tradingview.com/script/sHgNTSMM-Session-Range-Boxes-Asia-London-New-York/" target="_blank" rel="noopener" 
+               style="display:block; background:var(--bg-elevated); border:1px solid var(--border); border-radius:12px; padding:1rem 1.25rem; text-decoration:none; color:inherit; transition:all 0.2s; cursor:pointer;"
+               onmouseover="this.style.borderColor='var(--accent)'; this.style.background='rgba(59,130,246,0.12)'"
+               onmouseout="this.style.borderColor='var(--border)'; this.style.background='var(--bg-elevated)'">
+              <div style="font-weight:600; margin-bottom:0.3rem; color:var(--accent);">Session Range Boxes →</div>
+              <div style="font-size:0.85rem; color:var(--text-muted);">by cfdtools — Clean Asia / London / NY boxes with high-low</div>
+            </a>
+            <a href="https://www.tradingview.com/script/1DTjzmWe-Forex-Killzones-Sessions-Toolkit-Quanty/" target="_blank" rel="noopener"
+               style="display:block; background:var(--bg-elevated); border:1px solid var(--border); border-radius:12px; padding:1rem 1.25rem; text-decoration:none; color:inherit; transition:all 0.2s; cursor:pointer;"
+               onmouseover="this.style.borderColor='var(--accent)'; this.style.background='rgba(59,130,246,0.12)'"
+               onmouseout="this.style.borderColor='var(--border)'; this.style.background='var(--bg-elevated)'">
+              <div style="font-weight:600; margin-bottom:0.3rem; color:var(--accent);">Forex Killzones & Sessions →</div>
+              <div style="font-size:0.85rem; color:var(--text-muted);">by QuantyFin — Sessions + ICT Kill Zones (recommended for SMC)</div>
+            </a>
+            <a href="https://www.tradingview.com/script/EOIaYYtE-Trading-Sessions-and-Kill-Zones/" target="_blank" rel="noopener"
+               style="display:block; background:var(--bg-elevated); border:1px solid var(--border); border-radius:12px; padding:1rem 1.25rem; text-decoration:none; color:inherit; transition:all 0.2s; cursor:pointer;"
+               onmouseover="this.style.borderColor='var(--accent)'; this.style.background='rgba(59,130,246,0.12)'"
+               onmouseout="this.style.borderColor='var(--border)'; this.style.background='var(--bg-elevated)'">
+              <div style="font-weight:600; margin-bottom:0.3rem; color:var(--accent);">Trading Sessions and Kill Zones →</div>
+              <div style="font-size:0.85rem; color:var(--text-muted);">by allaeuer — Full sessions + London & NY Kill Zones</div>
+            </a>
+          </div>
+
+          <p style="font-size:0.9rem; color:var(--text-muted);">
+            <strong>Tip:</strong> After adding the indicator, open its settings and set the timezone to <strong>Europe/London</strong> (or New York if you prefer).  
+            Most of these indicators auto-adjust for daylight saving.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Disclaimer -->
+    <section>
+      <div class="container">
+        <div class="disclaimer">
+          <strong>Risk Disclaimer</strong><br>
+          This website is an educational tool only. It does not provide personalised financial, investment or trading advice.
+          Smart Money Concepts are a discretionary framework — no strategy guarantees profits. Forex and CFDs involve substantial risk of loss and are not suitable for every investor.
+          Past performance is not indicative of future results. Always do your own analysis, use proper risk management, and consider seeking advice from a licensed professional.
+          You are solely responsible for any trading decisions you make.
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>London SMC Signals · Educational Forex Toolkit · London Session Focus</p>
+      <p class="mt-2">Built for traders studying Smart Money Concepts · Not affiliated with any broker</p>
+    </div>
+  </footer>
+
+  <!-- TradingView Widget -->
+  <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script>
+    // ========== Smooth scroll + Active nav highlighting ==========
+    document.querySelectorAll('#main-nav a').forEach(link => {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        const targetId = this.getAttribute('href').substring(1);
+        const target = document.getElementById(targetId);
+        if (target) {
+          const headerOffset = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--header-height')) || 70;
+          const elementPosition = target.getBoundingClientRect().top;
+          const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: 'smooth'
+          });
+
+          // Update active state immediately
+          document.querySelectorAll('#main-nav a').forEach(a => a.classList.remove('active'));
+          this.classList.add('active');
+        }
+      });
+    });
+
+    // Highlight nav item based on scroll position
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('#main-nav a');
+
+    function updateActiveNav() {
+      const headerOffset = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--header-height')) || 70;
+      let current = '';
+
+      sections.forEach(section => {
+        const sectionTop = section.offsetTop - headerOffset - 50;
+        if (window.pageYOffset >= sectionTop) {
+          current = section.getAttribute('id');
+        }
+      });
+
+      navLinks.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('data-section') === current) {
+          link.classList.add('active');
+        }
+      });
+    }
+
+    window.addEventListener('scroll', updateActiveNav);
+    updateActiveNav();
+
+    // ========== Live Rates API (Twelve Data) ==========
+    const TWELVE_DATA_KEY = '93a0d343c148496ca1b397806782bf2b';
+
+    async function fetchRates() {
+      const eurusdEl = document.getElementById('rate-eurusd');
+      const gbpusdEl = document.getElementById('rate-gbpusd');
+      const usdjpyEl = document.getElementById('rate-usdjpy');
+      const xauusdEl = document.getElementById('rate-xauusd');
+      const dateEl = document.getElementById('rate-date');
+      const sourceEl = document.getElementById('rate-source');
+
+      try {
+        const symbols = 'EUR/USD,GBP/USD,USD/JPY,XAU/USD';
+        const url = `https://api.twelvedata.com/quote?symbol=${symbols}&apikey=${TWELVE_DATA_KEY}`;
+        const res = await fetch(url);
+        if (!res.ok) throw new Error('Twelve Data response not OK');
+        const data = await res.json();
+
+        const getPrice = (sym) => {
+          const item = data[sym] || data;
+          return item && item.close ? parseFloat(item.close) : null;
+        };
+
+        const eurusd = getPrice('EUR/USD');
+        const gbpusd = getPrice('GBP/USD');
+        const usdjpy = getPrice('USD/JPY');
+        const xauusd = getPrice('XAU/USD');
+
+        if (eurusd) eurusdEl.textContent = eurusd.toFixed(5);
+        if (gbpusd) gbpusdEl.textContent = gbpusd.toFixed(5);
+        if (usdjpy) usdjpyEl.textContent = usdjpy.toFixed(3);
+        if (xauusd && xauusdEl) xauusdEl.textContent = xauusd.toFixed(2);
+
+        const now = new Date();
+        dateEl.textContent = `Live · ${now.toLocaleTimeString('en-GB', {hour:'2-digit', minute:'2-digit', second:'2-digit'})}`;
+        sourceEl.textContent = 'Twelve Data ✓ Live';
+
+        window.latestRates = {
+          eurusd: eurusd,
+          gbpusd: gbpusd,
+          usdjpy: usdjpy,
+          xauusd: xauusd,
+          date: now.toISOString()
+        };
+      } catch (err) {
+        console.warn('Twelve Data fetch failed, falling back…', err);
+        try {
+          const res2 = await fetch('https://api.frankfurter.dev/v2/rates?base=USD&quotes=EUR,GBP,JPY');
+          const data2 = await res2.json();
+          const rates = {};
+          data2.forEach(row => { rates[row.quote] = row.rate; });
+
+          const eurusd = rates.EUR ? (1 / rates.EUR).toFixed(5) : '—';
+          const gbpusd = rates.GBP ? (1 / rates.GBP).toFixed(5) : '—';
+          const usdjpy = rates.JPY ? rates.JPY.toFixed(3) : '—';
+
+          eurusdEl.textContent = eurusd;
+          gbpusdEl.textContent = gbpusd;
+          usdjpyEl.textContent = usdjpy;
+          if (xauusdEl) xauusdEl.textContent = '—';
+          dateEl.textContent = 'Daily reference (fallback)';
+          sourceEl.textContent = 'Frankfurter';
+          window.latestRates = { eurusd: parseFloat(eurusd), gbpusd: parseFloat(gbpusd), usdjpy: parseFloat(usdjpy) };
+        } catch (err2) {
+          eurusdEl.textContent = 'N/A';
+          gbpusdEl.textContent = 'N/A';
+          usdjpyEl.textContent = 'N/A';
+          if (xauusdEl) xauusdEl.textContent = 'N/A';
+          dateEl.textContent = 'Unable to load rates';
+          sourceEl.textContent = 'Offline';
+        }
+      }
+    }
+
+    // ========== Live Price Chart ==========
+    const priceHistory = {
+      'EUR/USD': [],
+      'GBP/USD': [],
+      'USD/JPY': [],
+      'XAU/USD': []
+    };
+    const MAX_POINTS = 40;
+    let liveChart = null;
+    let currentChartPair = 'EUR/USD';
+
+    function initLiveChart() {
+      const ctx = document.getElementById('livePriceChart');
+      if (!ctx) return;
+
+      liveChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: [],
+          datasets: [{
+            label: currentChartPair,
+            data: [],
+            borderColor: '#3b82f6',
+            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+            borderWidth: 2,
+            pointRadius: 0,
+            pointHoverRadius: 4,
+            fill: true,
+            tension: 0.3
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          animation: { duration: 400 },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              mode: 'index',
+              intersect: false,
+              backgroundColor: '#1a2332',
+              titleColor: '#e8eef7',
+              bodyColor: '#e8eef7',
+              borderColor: '#1e2a3a',
+              borderWidth: 1
+            }
+          },
+          scales: {
+            x: {
+              display: true,
+              ticks: { color: '#8b9cb3', maxTicksLimit: 8, font: { size: 10 } },
+              grid: { color: 'rgba(30,42,58,0.5)' }
+            },
+            y: {
+              display: true,
+              ticks: { color: '#8b9cb3', font: { size: 11 } },
+              grid: { color: 'rgba(30,42,58,0.5)' }
+            }
+          },
+          interaction: { mode: 'nearest', axis: 'x', intersect: false }
+        }
+      });
+    }
+
+    function updateLiveChart(pair, price) {
+      if (!price || isNaN(price)) return;
+
+      const history = priceHistory[pair];
+      const now = new Date();
+      const timeLabel = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+
+      history.push({ time: timeLabel, price: price });
+      if (history.length > MAX_POINTS) history.shift();
+
+      if (pair === currentChartPair && liveChart) {
+        liveChart.data.labels = history.map(h => h.time);
+        liveChart.data.datasets[0].data = history.map(h => h.price);
+        liveChart.data.datasets[0].label = pair;
+
+        if (history.length >= 2) {
+          const last = history[history.length - 1].price;
+          const prev = history[history.length - 2].price;
+          liveChart.data.datasets[0].borderColor = last >= prev ? '#10b981' : '#ef4444';
+          liveChart.data.datasets[0].backgroundColor = last >= prev ? 'rgba(16,185,129,0.1)' : 'rgba(239,68,68,0.1)';
+        }
+
+        liveChart.update('none');
+
+        const priceEl = document.getElementById('live-chart-price');
+        if (priceEl) {
+          const decimals = pair.includes('JPY') ? 3 : (pair.includes('XAU') ? 2 : 5);
+          priceEl.textContent = price.toFixed(decimals);
+          priceEl.style.color = history.length >= 2 && history[history.length-1].price >= history[history.length-2].price ? 'var(--green)' : 'var(--red)';
+        }
+      }
+    }
+
+    function switchLiveChart() {
+      currentChartPair = document.getElementById('chart-pair-select').value;
+      const history = priceHistory[currentChartPair] || [];
+
+      if (liveChart) {
+        liveChart.data.labels = history.map(h => h.time);
+        liveChart.data.datasets[0].data = history.map(h => h.price);
+        liveChart.data.datasets[0].label = currentChartPair;
+        liveChart.update();
+      }
+
+      const priceEl = document.getElementById('live-chart-price');
+      if (priceEl && history.length) {
+        const decimals = currentChartPair.includes('JPY') ? 3 : (currentChartPair.includes('XAU') ? 2 : 5);
+        priceEl.textContent = history[history.length-1].price.toFixed(decimals);
+      }
+    }
+
+    const originalFetchRates = fetchRates;
+    fetchRates = async function() {
+      await originalFetchRates();
+      const rates = window.latestRates || {};
+      if (rates.eurusd) updateLiveChart('EUR/USD', rates.eurusd);
+      if (rates.gbpusd) updateLiveChart('GBP/USD', rates.gbpusd);
+      if (rates.usdjpy) updateLiveChart('USD/JPY', rates.usdjpy);
+      if (rates.xauusd) updateLiveChart('XAU/USD', rates.xauusd);
+    };
+
+    setTimeout(initLiveChart, 300);
+
+    fetchRates().then(() => updatePairPriceHint());
+    setInterval(() => { fetchRates().then(() => updatePairPriceHint()); }, 15 * 1000);
+
+    // ========== Asian Session High / Low ==========
+    async function loadAsianRange() {
+      const pair = document.getElementById('asian-pair-select').value;
+      const highEl = document.getElementById('asian-high');
+      const lowEl = document.getElementById('asian-low');
+      const highTimeEl = document.getElementById('asian-high-time');
+      const lowTimeEl = document.getElementById('asian-low-time');
+      const rangeEl = document.getElementById('asian-range-size');
+      const statusEl = document.getElementById('asian-status');
+      const pairLabel = document.getElementById('asian-pair');
+
+      pairLabel.textContent = pair;
+      statusEl.textContent = 'Loading…';
+      highEl.textContent = '—';
+      lowEl.textContent = '—';
+
+      try {
+        const url = `https://api.twelvedata.com/time_series?symbol=${pair}&interval=15min&outputsize=150&apikey=${TWELVE_DATA_KEY}`;
+        const res = await fetch(url);
+        const data = await res.json();
+
+        if (!data.values || data.values.length === 0) {
+          statusEl.textContent = 'No data returned';
+          return;
+        }
+
+        const bars = data.values.map(b => {
+          const dt = new Date(b.datetime + 'Z');
+          const londonStr = dt.toLocaleString('en-GB', { timeZone: 'Europe/London' });
+          const londonDate = new Date(londonStr);
+          return {
+            high: parseFloat(b.high),
+            low: parseFloat(b.low),
+            datetime: b.datetime,
+            londonHour: londonDate.getHours(),
+            londonDate: londonDate
+          };
+        });
+
+        const asianBars = bars.filter(b => b.londonHour >= 0 && b.londonHour < 8);
+
+        if (asianBars.length === 0) {
+          statusEl.textContent = 'No Asian bars found in recent data';
+          return;
+        }
+
+        const byDay = {};
+        asianBars.forEach(b => {
+          const dayKey = b.londonDate.toLocaleDateString('en-CA');
+          if (!byDay[dayKey]) byDay[dayKey] = [];
+          byDay[dayKey].push(b);
+        });
+
+        const days = Object.keys(byDay).sort().reverse();
+        const latestDay = days[0];
+        const sessionBars = byDay[latestDay];
+
+        let asiaHigh = -Infinity;
+        let asiaLow = Infinity;
+        let highTime = '';
+        let lowTime = '';
+
+        sessionBars.forEach(b => {
+          if (b.high > asiaHigh) {
+            asiaHigh = b.high;
+            highTime = b.datetime;
+          }
+          if (b.low < asiaLow) {
+            asiaLow = b.low;
+            lowTime = b.datetime;
+          }
+        });
+
+        const decimals = pair.includes('JPY') || pair.includes('XAU') ? 3 : 5;
+        highEl.textContent = asiaHigh.toFixed(decimals);
+        lowEl.textContent = asiaLow.toFixed(decimals);
+        highTimeEl.textContent = highTime ? highTime.slice(0,16) : '';
+        lowTimeEl.textContent = lowTime ? lowTime.slice(0,16) : '';
+
+        const range = asiaHigh - asiaLow;
+        rangeEl.textContent = range.toFixed(decimals);
+        statusEl.textContent = `Session: ${latestDay} · ${sessionBars.length} bars`;
+
+        window.currentAsianRange = {
+          pair: pair,
+          high: asiaHigh,
+          low: asiaLow,
+          range: range,
+          day: latestDay
+        };
+
+      } catch (err) {
+        console.error(err);
+        statusEl.textContent = 'Error loading data';
+      }
+    }
+
+    function fillSignalTool() {
+      const range = window.currentAsianRange;
+      if (!range) {
+        alert('Please calculate the Asian Range first.');
+        return;
+      }
+
+      const pairMap = {
+        'EUR/USD': 'EURUSD',
+        'GBP/USD': 'GBPUSD',
+        'USD/JPY': 'USDJPY',
+        'GBP/JPY': 'GBPJPY',
+        'XAU/USD': 'XAUUSD'
+      };
+
+      document.getElementById('pair').value = pairMap[range.pair] || 'OTHER';
+      document.getElementById('asia-high').value = range.high;
+      document.getElementById('asia-low').value = range.low;
+
+      document.getElementById('tool').scrollIntoView({ behavior: 'smooth' });
+      updatePairPriceHint();
+    }
+
+    loadAsianRange();
+
+    // ========== Session Clock ==========
+    function getLondonTime() {
+      return new Date(new Date().toLocaleString('en-US', { timeZone: 'Europe/London' }));
+    }
+
+    function formatTime(d) {
+      return d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
+    }
+
+    function formatDate(d) {
+      return d.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
+    }
+
+    function updateClock() {
+      const now = getLondonTime();
+      const h = now.getHours();
+      const m = now.getMinutes();
+      const totalMins = h * 60 + m;
+
+      document.getElementById('london-time').textContent = formatTime(now);
+      document.getElementById('london-date').textContent = formatDate(now);
+
+      const rateDateEl = document.getElementById('rate-date');
+      if (rateDateEl && window.latestRates) {
+        rateDateEl.textContent = `Live · ${formatTime(now)}`;
+      }
+
+      const sessionOpen = 8 * 60;
+      const sessionClose = 16 * 60;
+      const killStart = 7 * 60;
+      const killEnd = 10 * 60;
+
+      const inSession = totalMins >= sessionOpen && totalMins < sessionClose;
+      const inKill = totalMins >= killStart && totalMins < killEnd;
+
+      const statusEl = document.getElementById('session-status');
+      const killEl = document.getElementById('killzone-status');
+      const nextEl = document.getElementById('next-event');
+      const nextSub = document.getElementById('next-event-sub');
+
+      if (inSession) {
+        statusEl.innerHTML = `<span class="badge badge-live"><span class="dot"></span> OPEN</span>`;
+      } else {
+        statusEl.innerHTML = `<span class="badge badge-closed"><span class="dot"></span> CLOSED</span>`;
+      }
+
+      if (inKill) {
+        killEl.innerHTML = `<span class="badge badge-kill"><span class="dot"></span> ACTIVE</span>`;
+      } else {
+        killEl.innerHTML = `<span class="badge badge-closed">INACTIVE</span>`;
+      }
+
+      if (totalMins < killStart) {
+        const minsLeft = killStart - totalMins;
+        nextEl.textContent = `Kill Zone in ${Math.floor(minsLeft / 60)}h ${minsLeft % 60}m`;
+        nextSub.textContent = 'Prepare Asian range levels';
+      } else if (inKill) {
+        const minsLeft = killEnd - totalMins;
+        nextEl.textContent = `Kill Zone ends in ${minsLeft}m`;
+        nextSub.textContent = 'Watch for sweeps & displacement';
+      } else if (totalMins < sessionOpen) {
+        nextEl.textContent = `Session opens soon`;
+        nextSub.textContent = 'London open approaching';
+      } else if (inSession) {
+        const minsLeft = sessionClose - totalMins;
+        nextEl.textContent = `Session ends in ${Math.floor(minsLeft / 60)}h ${minsLeft % 60}m`;
+        nextSub.textContent = 'Manage open trades';
+      } else {
+        nextEl.textContent = `Next: Kill Zone tomorrow`;
+        nextSub.textContent = 'Review today’s structure';
+      }
+    }
+
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    // ========== Pair price hint ==========
+    function updatePairPriceHint() {
+      const pair = document.getElementById('pair').value;
+      const hint = document.getElementById('pair-price-hint');
+      const rates = window.latestRates || {};
+      if (pair === 'EURUSD' && rates.eurusd) {
+        hint.textContent = `Current reference ≈ ${rates.eurusd.toFixed(5)}`;
+      } else if (pair === 'GBPUSD' && rates.gbpusd) {
+        hint.textContent = `Current reference ≈ ${rates.gbpusd.toFixed(5)}`;
+      } else if (pair === 'USDJPY' && rates.usdjpy) {
+        hint.textContent = `Current reference ≈ ${rates.usdjpy.toFixed(3)}`;
+      } else if (pair === 'XAUUSD' && rates.xauusd) {
+        hint.textContent = `Current reference ≈ ${rates.xauusd.toFixed(2)}`;
+      } else {
+        hint.textContent = '';
+      }
+    }
+
+    // ========== Signal Tool ==========
+    function scoreDirection(direction, bias, swept, confirm) {
+      let score = 0;
+      let reasons = [];
+
+      if (direction === 'long' && swept === 'low') {
+        score += 2;
+        reasons.push('Swept Asian Low → bullish liquidity grab');
+      } else if (direction === 'short' && swept === 'high') {
+        score += 2;
+        reasons.push('Swept Asian High → bearish liquidity grab');
+      } else if (swept === 'both') {
+        score -= 2;
+        reasons.push('Both sides swept → choppy / seek & destroy');
+      } else if (swept === 'none') {
+        reasons.push('No sweep yet');
+      } else {
+        reasons.push('Sweep is against this direction');
+      }
+
+      if (confirm === 'mss') { score += 1; reasons.push('MSS / CHOCH'); }
+      else if (confirm === 'bos') { score += 2; reasons.push('BOS + FVG/OB'); }
+      else if (confirm === 'strong') { score += 3; reasons.push('Strong displacement + FVG + OB'); }
+      else if (swept !== 'none') { reasons.push('No structure confirmation yet'); }
+
+      if ((direction === 'long' && bias === 'bullish') || (direction === 'short' && bias === 'bearish')) {
+        score += 2;
+        reasons.push('Aligned with HTF bias');
+      } else if (bias === 'neutral') {
+        reasons.push('HTF bias neutral');
+      } else {
+        score -= 2;
+        reasons.push('Against HTF bias');
+      }
+
+      return { score, reasons };
+    }
+
+    function verdictFromScore(score, direction) {
+      if (score >= 5) return { text: direction === 'long' ? '🟢 STRONG BUY' : '🔴 STRONG SELL', level: 'strong' };
+      if (score >= 3) return { text: direction === 'long' ? '🟡 CONDITIONAL BUY' : '🟡 CONDITIONAL SELL', level: 'conditional' };
+      return { text: '⏳ WAIT / LOW PROB', level: 'wait' };
+    }
+
+    let lastSignalText = '';
+
+    function generateSignal() {
+      const bias = document.getElementById('bias').value;
+      const swept = document.getElementById('swept').value;
+      const confirm = document.getElementById('confirm').value;
+      const asiaHigh = parseFloat(document.getElementById('asia-high').value);
+      const asiaLow = parseFloat(document.getElementById('asia-low').value);
+      const pair = document.getElementById('pair').value;
+
+      const resultBox = document.getElementById('result');
+      const longEl = document.getElementById('result-long');
+      const shortEl = document.getElementById('result-short');
+      const longDetail = document.getElementById('result-long-detail');
+      const shortDetail = document.getElementById('result-short-detail');
+      const detailEl = document.getElementById('result-detail');
+      const copyBtn = document.getElementById('copy-btn');
+      const copyFeedback = document.getElementById('copy-feedback');
+
+      resultBox.classList.add('visible');
+      copyFeedback.style.display = 'none';
+
+      if (isNaN(asiaHigh) || isNaN(asiaLow) || asiaHigh <= asiaLow) {
+        longEl.textContent = '—';
+        shortEl.textContent = '—';
+        longDetail.textContent = '';
+        shortDetail.textContent = '';
+        detailEl.innerHTML = 'Please enter a valid Asian High and Asian Low (High must be greater than Low).';
+        copyBtn.style.display = 'none';
+        return;
+      }
+
+      const longScore = scoreDirection('long', bias, swept, confirm);
+      const shortScore = scoreDirection('short', bias, swept, confirm);
+
+      const longVerdict = verdictFromScore(longScore.score, 'long');
+      const shortVerdict = verdictFromScore(shortScore.score, 'short');
+
+      longEl.textContent = longVerdict.text;
+      shortEl.textContent = shortVerdict.text;
+      longDetail.textContent = `Score: ${longScore.score}/7 · ${longScore.reasons.slice(0,2).join(' · ')}`;
+      shortDetail.textContent = `Score: ${shortScore.score}/7 · ${shortScore.reasons.slice(0,2).join(' · ')}`;
+
+      let advice = '';
+      if (swept === 'both') {
+        advice = 'Both sides of the Asian range have been swept. Environment is likely choppy. Prefer to stay out.';
+      } else if (longScore.score >= 5 && shortScore.score < 3) {
+        advice = `Preferred side: <strong>BUY</strong> on ${pair}. Enter on FVG/OB retest after the sweep of the Asian Low. Stop below the sweep extreme. Target opposite side of range or next HTF liquidity.`;
+      } else if (shortScore.score >= 5 && longScore.score < 3) {
+        advice = `Preferred side: <strong>SELL</strong> on ${pair}. Enter on FVG/OB retest after the sweep of the Asian High. Stop above the sweep extreme. Target opposite side of range or next HTF liquidity.`;
+      } else if (longScore.score >= 3 || shortScore.score >= 3) {
+        advice = 'Conditional setup only. Wait for clearer displacement and structure shift before entering. Reduce size.';
+      } else {
+        advice = 'No high-probability setup yet. Wait for a clean sweep of one side of the Asian range + confirmation.';
+      }
+
+      detailEl.innerHTML = `
+        <p>${advice}</p>
+        <p class="mt-2" style="font-size:0.85rem; opacity:0.8;">
+          Asian Range: ${asiaLow.toFixed(5)} – ${asiaHigh.toFixed(5)} · Always confirm on your own chart.
+        </p>
+      `;
+
+      const now = new Date().toLocaleString('en-GB', { timeZone: 'Europe/London' });
+      lastSignalText = `London SMC Signal — ${pair}
+Time (London): ${now}
+Asian High: ${asiaHigh}
+Asian Low: ${asiaLow}
+
+BUY / LONG: ${longVerdict.text} (Score ${longScore.score}/7)
+${longScore.reasons.join(' | ')}
+
+SELL / SHORT: ${shortVerdict.text} (Score ${shortScore.score}/7)
+${shortScore.reasons.join(' | ')}
+
+Notes: ${advice.replace(/<[^>]*>/g, '')}
+Risk: Always use proper risk management. This is educational only.`;
+
+      copyBtn.style.display = 'inline-flex';
+    }
+
+    function copySignal() {
+      if (!lastSignalText) return;
+      navigator.clipboard.writeText(lastSignalText).then(() => {
+        const feedback = document.getElementById('copy-feedback');
+        feedback.style.display = 'block';
+        setTimeout(() => feedback.style.display = 'none', 2500);
+      }).catch(() => {
+        const ta = document.createElement('textarea');
+        ta.value = lastSignalText;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        const feedback = document.getElementById('copy-feedback');
+        feedback.style.display = 'block';
+        setTimeout(() => feedback.style.display = 'none', 2500);
+      });
+    }
+
+    function resetTool() {
+      document.getElementById('asia-high').value = '';
+      document.getElementById('asia-low').value = '';
+      document.getElementById('swept').value = 'none';
+      document.getElementById('confirm').value = 'none';
+      document.getElementById('bias').value = 'bullish';
+      document.getElementById('result').classList.remove('visible');
+      document.getElementById('copy-btn').style.display = 'none';
+      document.getElementById('copy-feedback').style.display = 'none';
+      lastSignalText = '';
+    }
+
+    // ========== TradingView ==========
+    let tvWidget = null;
+    let currentSymbol = 'FX:EURUSD';
+    let currentTimezone = 'Europe/London';
+
+    function loadChart(symbol, timezone) {
+      if (symbol) currentSymbol = symbol;
+      if (timezone) currentTimezone = timezone;
+
+      const container = document.getElementById('tradingview-widget');
+      container.innerHTML = '';
+
+      const label = document.getElementById('current-tz-label');
+      if (label) {
+        label.textContent = currentTimezone === 'exchange' ? 'Exchange default' : currentTimezone;
+      }
+
+      tvWidget = new TradingView.widget({
+        autosize: true,
+        symbol: currentSymbol,
+        interval: '15',
+        timezone: currentTimezone,
+        theme: 'dark',
+        style: '1',
+        locale: 'en',
+        toolbar_bg: '#121826',
+        enable_publishing: false,
+        hide_top_toolbar: false,
+        hide_legend: false,
+        save_image: false,
+        container_id: 'tradingview-widget',
+        studies: [],
+        overrides: {
+          'paneProperties.background': '#0b0f19',
+          'paneProperties.backgroundType': 'solid',
+          'scalesProperties.timeFormat': '24h'
+        }
+      });
+    }
+
+    document.querySelectorAll('.pair-btn:not(.tz-btn)').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.pair-btn:not(.tz-btn)').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        loadChart(btn.dataset.symbol, currentTimezone);
+      });
+    });
+
+    document.querySelectorAll('.tz-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tz-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        loadChart(currentSymbol, btn.dataset.tz);
+      });
+    });
+
+    loadChart('FX:EURUSD', 'Europe/London');
+  </script>
+</body>
+</html>

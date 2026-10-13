@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Blue Signals | Smart Money Forex – London Session Only</title>
+  <title>London SMC Signals | Smart Money Forex – London Session Only</title>
   <meta name="description" content="Forex signals and educational toolkit based on Smart Money Concepts (SMC) exclusively for the London session. Asian range liquidity sweeps, Order Blocks, FVGs, BOS & CHOCH." />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -221,9 +221,14 @@
       50% { opacity: 0.45; transform: scale(0.85); }
     }
 
-    /* Sections */
+    html {
+      scroll-behavior: smooth;
+    }
+
+    /* Sections – offset so sticky header does not cover the target */
     section {
       padding: 3.25rem 0;
+      scroll-margin-top: 72px;
     }
 
     .section-title {
@@ -538,6 +543,7 @@
       </div>
       <nav>
         <a href="#status">Session</a>
+        <a href="#call">Call</a>
         <a href="#prices">Live Rates</a>
         <a href="#strategy">Strategy</a>
         <a href="#tool">Signal Tool</a>
@@ -579,6 +585,60 @@
             <div class="value" id="next-event" style="font-size:1.15rem;">—</div>
             <div class="sub" id="next-event-sub">—</div>
           </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Trade Call – what to execute -->
+    <section id="call">
+      <div class="container">
+        <h2 class="section-title">Trade Call</h2>
+        <p class="section-sub">Clear action to execute based on Asian range + structure. Update levels in the Signal Tool, then refresh the call.</p>
+
+        <div class="tool-card" style="border: 1px solid rgba(79,140,255,0.35);">
+          <div style="display:flex; flex-wrap:wrap; gap:1rem; align-items:center; justify-content:space-between; margin-bottom:1.25rem;">
+            <div>
+              <div style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-muted); margin-bottom:0.25rem;">Current Call</div>
+              <div id="call-direction" style="font-size:1.75rem; font-weight:800; letter-spacing:-0.02em;">⏳ WAIT</div>
+            </div>
+            <div style="text-align:right;">
+              <div style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-muted);">Pair</div>
+              <div id="call-pair" style="font-size:1.25rem; font-weight:700; font-family:'JetBrains Mono',monospace;">—</div>
+            </div>
+          </div>
+
+          <div class="status-grid" style="margin-top:0;">
+            <div class="status-card">
+              <div class="label">Entry Zone</div>
+              <div class="value" id="call-entry" style="font-size:1.15rem;">—</div>
+              <div class="sub">FVG / Order Block retest</div>
+            </div>
+            <div class="status-card">
+              <div class="label">Stop Loss</div>
+              <div class="value" id="call-sl" style="font-size:1.15rem; color:var(--red);">—</div>
+              <div class="sub">Beyond sweep extreme</div>
+            </div>
+            <div class="status-card">
+              <div class="label">Take Profit 1</div>
+              <div class="value" id="call-tp1" style="font-size:1.15rem; color:var(--green);">—</div>
+              <div class="sub">Opposite Asian level</div>
+            </div>
+            <div class="status-card">
+              <div class="label">Confidence</div>
+              <div class="value" id="call-confidence" style="font-size:1.15rem;">—</div>
+              <div class="sub" id="call-score-sub">Score / 7</div>
+            </div>
+          </div>
+
+          <div id="call-notes" style="margin-top:1.25rem; padding:1rem 1.15rem; background:var(--bg-elevated); border-radius:12px; font-size:0.95rem; color:var(--text-muted);">
+            Fill Asian High/Low in the Signal Tool, select sweep + confirmation, then tap <strong>Generate Signal Assessment</strong>. The call above will update automatically.
+          </div>
+
+          <div style="margin-top:1.25rem; display:flex; flex-wrap:wrap; gap:0.75rem;">
+            <button class="btn" onclick="document.getElementById('tool').scrollIntoView({behavior:'smooth', block:'start'})">Open Signal Tool</button>
+            <button class="btn btn-secondary" id="copy-call-btn" onclick="copyCall()" style="display:none;">Copy Call</button>
+          </div>
+          <div id="copy-call-feedback" style="display:none; margin-top:0.75rem; color:var(--green); font-size:0.9rem;">✓ Call copied to clipboard</div>
         </div>
       </div>
     </section>
@@ -1482,6 +1542,13 @@
         shortDetail.textContent = '';
         detailEl.innerHTML = 'Please enter a valid Asian High and Asian Low (High must be greater than Low).';
         copyBtn.style.display = 'none';
+        document.getElementById('call-direction').textContent = '⏳ WAIT';
+        document.getElementById('call-direction').style.color = 'var(--amber)';
+        document.getElementById('call-entry').textContent = '—';
+        document.getElementById('call-sl').textContent = '—';
+        document.getElementById('call-tp1').textContent = '—';
+        document.getElementById('call-confidence').textContent = '—';
+        document.getElementById('copy-call-btn').style.display = 'none';
         return;
       }
 
@@ -1517,7 +1584,80 @@
         </p>
       `;
 
-      // Prepare text for copy
+      // ----- Update Trade Call section -----
+      const decimals = (pair.includes('JPY') || pair === 'XAUUSD') ? (pair === 'XAUUSD' ? 2 : 3) : 5;
+      const callDir = document.getElementById('call-direction');
+      const callPair = document.getElementById('call-pair');
+      const callEntry = document.getElementById('call-entry');
+      const callSl = document.getElementById('call-sl');
+      const callTp1 = document.getElementById('call-tp1');
+      const callConf = document.getElementById('call-confidence');
+      const callScoreSub = document.getElementById('call-score-sub');
+      const callNotes = document.getElementById('call-notes');
+      const copyCallBtn = document.getElementById('copy-call-btn');
+
+      callPair.textContent = pair;
+
+      let preferred = null;
+      let bestScore = 0;
+      if (longScore.score >= shortScore.score && longScore.score >= 3) {
+        preferred = 'long';
+        bestScore = longScore.score;
+      } else if (shortScore.score > longScore.score && shortScore.score >= 3) {
+        preferred = 'short';
+        bestScore = shortScore.score;
+      }
+
+      if (preferred === 'long') {
+        callDir.textContent = bestScore >= 5 ? '🟢 BUY' : '🟡 BUY (Conditional)';
+        callDir.style.color = 'var(--green)';
+        // Entry near Asian low (discount), SL below low, TP at Asian high
+        const buffer = (asiaHigh - asiaLow) * 0.05;
+        callEntry.textContent = (asiaLow + buffer).toFixed(decimals) + ' – ' + (asiaLow + (asiaHigh - asiaLow) * 0.25).toFixed(decimals);
+        callSl.textContent = (asiaLow - buffer).toFixed(decimals);
+        callTp1.textContent = asiaHigh.toFixed(decimals);
+        callConf.textContent = bestScore >= 5 ? 'High' : 'Medium';
+        callScoreSub.textContent = `Score ${bestScore}/7`;
+        callNotes.innerHTML = `Execute <strong>BUY</strong> on ${pair}. Wait for price to retest FVG/OB after sweeping Asian Low. Place stop below the sweep. First target = Asian High. Manage risk 0.5–1%.`;
+        copyCallBtn.style.display = 'inline-flex';
+      } else if (preferred === 'short') {
+        callDir.textContent = bestScore >= 5 ? '🔴 SELL' : '🟡 SELL (Conditional)';
+        callDir.style.color = 'var(--red)';
+        const buffer = (asiaHigh - asiaLow) * 0.05;
+        callEntry.textContent = (asiaHigh - (asiaHigh - asiaLow) * 0.25).toFixed(decimals) + ' – ' + (asiaHigh - buffer).toFixed(decimals);
+        callSl.textContent = (asiaHigh + buffer).toFixed(decimals);
+        callTp1.textContent = asiaLow.toFixed(decimals);
+        callConf.textContent = bestScore >= 5 ? 'High' : 'Medium';
+        callScoreSub.textContent = `Score ${bestScore}/7`;
+        callNotes.innerHTML = `Execute <strong>SELL</strong> on ${pair}. Wait for price to retest FVG/OB after sweeping Asian High. Place stop above the sweep. First target = Asian Low. Manage risk 0.5–1%.`;
+        copyCallBtn.style.display = 'inline-flex';
+      } else {
+        callDir.textContent = '⏳ WAIT';
+        callDir.style.color = 'var(--amber)';
+        callEntry.textContent = '—';
+        callSl.textContent = '—';
+        callTp1.textContent = '—';
+        callConf.textContent = '—';
+        callScoreSub.textContent = 'No clear edge';
+        callNotes.innerHTML = advice.replace(/<[^>]*>/g, '') || 'No high-probability call yet. Wait for a clean sweep of one side of the Asian range + structure confirmation.';
+        copyCallBtn.style.display = 'none';
+      }
+
+      // Store for copy
+      window.lastCallText = preferred
+        ? `London SMC CALL — ${pair}
+Direction: ${preferred === 'long' ? 'BUY' : 'SELL'}
+Confidence: ${bestScore >= 5 ? 'High' : 'Medium'} (${bestScore}/7)
+Entry zone: ${callEntry.textContent}
+Stop Loss: ${callSl.textContent}
+Take Profit 1: ${callTp1.textContent}
+Asian High: ${asiaHigh.toFixed(decimals)}
+Asian Low: ${asiaLow.toFixed(decimals)}
+Notes: ${callNotes.textContent}
+Risk: Educational only. Confirm on your chart and use proper risk management.`
+        : `London SMC CALL — ${pair}\nDirection: WAIT\nNo clear high-probability setup yet.`;
+
+      // Prepare text for copy (full signal)
       const now = new Date().toLocaleString('en-GB', { timeZone: 'Europe/London' });
       lastSignalText = `London SMC Signal — ${pair}
 Time (London): ${now}
@@ -1543,7 +1683,6 @@ Risk: Always use proper risk management. This is educational only.`;
         feedback.style.display = 'block';
         setTimeout(() => feedback.style.display = 'none', 2500);
       }).catch(() => {
-        // Fallback
         const ta = document.createElement('textarea');
         ta.value = lastSignalText;
         document.body.appendChild(ta);
@@ -1551,6 +1690,26 @@ Risk: Always use proper risk management. This is educational only.`;
         document.execCommand('copy');
         document.body.removeChild(ta);
         const feedback = document.getElementById('copy-feedback');
+        feedback.style.display = 'block';
+        setTimeout(() => feedback.style.display = 'none', 2500);
+      });
+    }
+
+    function copyCall() {
+      const text = window.lastCallText || '';
+      if (!text) return;
+      navigator.clipboard.writeText(text).then(() => {
+        const feedback = document.getElementById('copy-call-feedback');
+        feedback.style.display = 'block';
+        setTimeout(() => feedback.style.display = 'none', 2500);
+      }).catch(() => {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        const feedback = document.getElementById('copy-call-feedback');
         feedback.style.display = 'block';
         setTimeout(() => feedback.style.display = 'none', 2500);
       });
@@ -1566,6 +1725,18 @@ Risk: Always use proper risk management. This is educational only.`;
       document.getElementById('copy-btn').style.display = 'none';
       document.getElementById('copy-feedback').style.display = 'none';
       lastSignalText = '';
+      // Reset Call section
+      document.getElementById('call-direction').textContent = '⏳ WAIT';
+      document.getElementById('call-direction').style.color = 'var(--amber)';
+      document.getElementById('call-pair').textContent = '—';
+      document.getElementById('call-entry').textContent = '—';
+      document.getElementById('call-sl').textContent = '—';
+      document.getElementById('call-tp1').textContent = '—';
+      document.getElementById('call-confidence').textContent = '—';
+      document.getElementById('call-score-sub').textContent = 'Score / 7';
+      document.getElementById('call-notes').innerHTML = 'Fill Asian High/Low in the Signal Tool, select sweep + confirmation, then tap <strong>Generate Signal Assessment</strong>. The call above will update automatically.';
+      document.getElementById('copy-call-btn').style.display = 'none';
+      window.lastCallText = '';
     }
 
     // ========== TradingView ==========
@@ -1629,6 +1800,24 @@ Risk: Always use proper risk management. This is educational only.`;
 
     // Initial chart – London timezone by default
     loadChart('FX:EURUSD', 'Europe/London');
+
+    // Fix nav links on mobile – scroll with offset for sticky header
+    document.querySelectorAll('nav a[href^="#"]').forEach(link => {
+      link.addEventListener('click', function(e) {
+        const targetId = this.getAttribute('href').slice(1);
+        const target = document.getElementById(targetId);
+        if (target) {
+          e.preventDefault();
+          const headerOffset = 70;
+          const elementPosition = target.getBoundingClientRect().top;
+          const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: 'smooth'
+          });
+        }
+      });
+    });
   </script>
 </body>
 </html>

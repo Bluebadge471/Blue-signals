@@ -1251,51 +1251,71 @@
       statusEl.textContent = 'Loading…';
       highEl.textContent = '—';
       lowEl.textContent = '—';
+      highTimeEl.textContent = '';
+      lowTimeEl.textContent = '';
+      rangeEl.textContent = '—';
 
       try {
-        // Fetch last ~2 days of 15min data (enough to cover previous Asian session)
-        const url = `https://api.twelvedata.com/time_series?symbol=${pair}&interval=15min&outputsize=150&apikey=${TWELVE_DATA_KEY}`;
+        // 15min bars – enough history for Asian session (00:00–08:00 London)
+        const url = `https://api.twelvedata.com/time_series?symbol=${encodeURIComponent(pair)}&interval=15min&outputsize=120&apikey=${TWELVE_DATA_KEY}`;
         const res = await fetch(url);
         const data = await res.json();
 
-        if (!data.values || data.values.length === 0) {
-          statusEl.textContent = 'No data returned';
+        // Handle API errors (rate limit, invalid key, etc.)
+        if (data.status === 'error' || data.code || !data.values) {
+          const msg = data.message || data.code || 'No data returned';
+          statusEl.textContent = String(msg).slice(0, 60);
+          console.warn('Twelve Data error:', data);
           return;
         }
 
-        // Convert bars to London time and filter Asian session (00:00 – 08:00 London)
-        // Twelve Data datetime is usually in exchange/UTC-ish; we treat it carefully
+        if (!data.values.length) {
+          statusEl.textContent = 'No bars in response';
+          return;
+        }
+
+        // Parse each bar into London local hour using Intl (reliable on mobile)
+        const fmtHour = new Intl.DateTimeFormat('en-GB', {
+          timeZone: 'Europe/London',
+          hour: 'numeric',
+          hour12: false
+        });
+        const fmtDay = new Intl.DateTimeFormat('en-CA', {
+          timeZone: 'Europe/London',
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit'
+        });
+
         const bars = data.values.map(b => {
-          // Parse as UTC then convert to London
-          const dt = new Date(b.datetime + 'Z'); // force UTC interpretation
-          const londonStr = dt.toLocaleString('en-GB', { timeZone: 'Europe/London' });
-          const londonDate = new Date(londonStr);
+          // Twelve Data forex timestamps are UTC
+          const dt = new Date(b.datetime.replace(' ', 'T') + 'Z');
+          const hourParts = fmtHour.formatToParts(dt);
+          const hour = parseInt(hourParts.find(p => p.type === 'hour').value, 10);
+          const dayKey = fmtDay.format(dt); // YYYY-MM-DD
           return {
             high: parseFloat(b.high),
             low: parseFloat(b.low),
             datetime: b.datetime,
-            londonHour: londonDate.getHours(),
-            londonDate: londonDate
+            londonHour: hour === 24 ? 0 : hour,
+            dayKey
           };
         });
 
-        // Find the most recent completed Asian session (00:00-08:00 London)
-        // We look for bars where hour is between 0 and 7 inclusive
+        // Asian session: 00:00 – 08:00 London
         const asianBars = bars.filter(b => b.londonHour >= 0 && b.londonHour < 8);
 
         if (asianBars.length === 0) {
-          statusEl.textContent = 'No Asian bars found in recent data';
+          statusEl.textContent = 'No Asian session bars (try later)';
           return;
         }
 
-        // Group by London calendar day and take the most recent full-ish session
+        // Most recent London calendar day that has Asian bars
         const byDay = {};
         asianBars.forEach(b => {
-          const dayKey = b.londonDate.toLocaleDateString('en-CA'); // YYYY-MM-DD
-          if (!byDay[dayKey]) byDay[dayKey] = [];
-          byDay[dayKey].push(b);
+          if (!byDay[b.dayKey]) byDay[b.dayKey] = [];
+          byDay[b.dayKey].push(b);
         });
-
         const days = Object.keys(byDay).sort().reverse();
         const latestDay = days[0];
         const sessionBars = byDay[latestDay];
@@ -1306,27 +1326,20 @@
         let lowTime = '';
 
         sessionBars.forEach(b => {
-          if (b.high > asiaHigh) {
-            asiaHigh = b.high;
-            highTime = b.datetime;
-          }
-          if (b.low < asiaLow) {
-            asiaLow = b.low;
-            lowTime = b.datetime;
-          }
+          if (b.high > asiaHigh) { asiaHigh = b.high; highTime = b.datetime; }
+          if (b.low < asiaLow) { asiaLow = b.low; lowTime = b.datetime; }
         });
 
-        const decimals = pair.includes('JPY') || pair.includes('XAU') ? 3 : 5;
+        const decimals = pair.includes('JPY') ? 3 : (pair.includes('XAU') ? 2 : 5);
         highEl.textContent = asiaHigh.toFixed(decimals);
         lowEl.textContent = asiaLow.toFixed(decimals);
-        highTimeEl.textContent = highTime ? highTime.slice(0,16) : '';
-        lowTimeEl.textContent = lowTime ? lowTime.slice(0,16) : '';
+        highTimeEl.textContent = highTime ? highTime.slice(0, 16) : '';
+        lowTimeEl.textContent = lowTime ? lowTime.slice(0, 16) : '';
 
         const range = asiaHigh - asiaLow;
         rangeEl.textContent = range.toFixed(decimals);
-        statusEl.textContent = `Session: ${latestDay} · ${sessionBars.length} bars`;
+        statusEl.textContent = `${latestDay} · ${sessionBars.length} bars`;
 
-        // Store for the "Use in Signal Tool" button
         window.currentAsianRange = {
           pair: pair,
           high: asiaHigh,
@@ -1335,20 +1348,22 @@
           day: latestDay
         };
 
+        // Auto-fill Signal Tool so you don't type levels
+        fillSignalTool(true);
+
       } catch (err) {
         console.error(err);
-        statusEl.textContent = 'Error loading data';
+        statusEl.textContent = 'Network error – check connection';
       }
     }
 
-    function fillSignalTool() {
+    function fillSignalTool(skipScroll) {
       const range = window.currentAsianRange;
       if (!range) {
-        alert('Please calculate the Asian Range first.');
+        if (!skipScroll) alert('Please calculate the Asian Range first.');
         return;
       }
 
-      // Map pair name
       const pairMap = {
         'EUR/USD': 'EURUSD',
         'GBP/USD': 'GBPUSD',
@@ -1361,8 +1376,9 @@
       document.getElementById('asia-high').value = range.high;
       document.getElementById('asia-low').value = range.low;
 
-      // Scroll to the tool
-      document.getElementById('tool').scrollIntoView({ behavior: 'smooth' });
+      if (!skipScroll) {
+        document.getElementById('tool').scrollIntoView({ behavior: 'smooth' });
+      }
       updatePairPriceHint();
     }
 

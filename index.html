@@ -110,6 +110,10 @@
       color: var(--text);
       background: rgba(79, 140, 255, 0.1);
     }
+    nav a.active {
+      color: var(--text);
+      background: rgba(79, 140, 255, 0.18);
+    }
 
     /* Hero / Status */
     .hero {
@@ -225,10 +229,19 @@
       scroll-behavior: smooth;
     }
 
-    /* Sections – offset so sticky header does not cover the target */
-    section {
-      padding: 3.25rem 0;
-      scroll-margin-top: 72px;
+    /* Sections as exclusive panels (no scrolling through other tabs) */
+    main > section[id] {
+      padding: 2.5rem 0;
+      display: none;
+    }
+    main > section[id].active-section {
+      display: block;
+      animation: fadeIn 0.25s ease;
+    }
+    /* Disclaimer always visible */
+    main > section:not([id]) {
+      padding: 2rem 0;
+      display: block;
     }
 
     .section-title {
@@ -555,7 +568,7 @@
 
   <main>
     <!-- Hero -->
-    <section class="hero" id="status">
+    <section class="hero active-section" id="status">
       <div class="container">
         <h1>Forex Signals by Smart Money Concepts</h1>
         <p>London Session only. Trade institutional footprints — liquidity sweeps of the Asian range, Order Blocks, Fair Value Gaps and structure shifts.</p>
@@ -631,7 +644,7 @@
           </div>
 
           <div id="call-notes" style="margin-top:1.25rem; padding:1rem 1.15rem; background:var(--bg-elevated); border-radius:12px; font-size:0.95rem; color:var(--text-muted);">
-            Fill Asian High/Low in the Signal Tool, select sweep + confirmation, then tap <strong>Generate Signal Assessment</strong>. The call above will update automatically.
+            Tap <strong>Refresh Asian Range</strong> — levels, sweep, and structure are detected automatically and the Call updates. You can still override the dropdowns manually.
           </div>
 
           <div style="margin-top:1.25rem; display:flex; flex-wrap:wrap; gap:0.75rem;">
@@ -705,7 +718,7 @@
       <div class="container">
         <h2 class="section-title">Asian Session Range (Auto)</h2>
         <p class="section-sub">
-          Automatically calculated from recent 15-minute candles using your Twelve Data key.  
+          Auto: Asian High/Low + sweep detection + structure confirmation from 15-min candles (Twelve Data).  
           Asian session defined as <strong>00:00 – 08:00 London time</strong>.
         </p>
 
@@ -1237,6 +1250,125 @@
     setInterval(() => { fetchRates().then(() => updatePairPriceHint()); }, 15 * 1000);
 
     // ========== Asian Session High / Low ==========
+    function detectSweepAndStructure(barsChrono, asiaHigh, asiaLow, asianDayKey) {
+      // barsChrono: oldest → newest
+      // Post-Asian bars: same day after 08:00 London, or any later day
+      var post = [];
+      for (var i = 0; i < barsChrono.length; i++) {
+        var b = barsChrono[i];
+        if (b.dayKey > asianDayKey) post.push(b);
+        else if (b.dayKey === asianDayKey && b.londonHour >= 8) post.push(b);
+      }
+      if (!post.length) {
+        // fallback: last 20 bars after last Asian bar
+        var lastAsianIdx = -1;
+        for (var j = barsChrono.length - 1; j >= 0; j--) {
+          if (barsChrono[j].londonHour >= 0 && barsChrono[j].londonHour < 8 && barsChrono[j].dayKey === asianDayKey) {
+            lastAsianIdx = j;
+            break;
+          }
+        }
+        if (lastAsianIdx >= 0) post = barsChrono.slice(lastAsianIdx + 1);
+      }
+
+      var sweptLow = false, sweptHigh = false;
+      var sweepLowIdx = -1, sweepHighIdx = -1;
+      for (var k = 0; k < post.length; k++) {
+        if (post[k].low < asiaLow) { sweptLow = true; if (sweepLowIdx < 0) sweepLowIdx = k; }
+        if (post[k].high > asiaHigh) { sweptHigh = true; if (sweepHighIdx < 0) sweepHighIdx = k; }
+      }
+
+      var swept = 'none';
+      if (sweptLow && sweptHigh) swept = 'both';
+      else if (sweptLow) swept = 'low';
+      else if (sweptHigh) swept = 'high';
+
+      function avgBody(arr, from, to) {
+        var n = 0, s = 0;
+        for (var i = Math.max(0, from); i < Math.min(arr.length, to); i++) {
+          s += Math.abs(arr[i].close - arr[i].open);
+          n++;
+        }
+        return n ? s / n : 0;
+      }
+
+      function hasBullFVG(arr, fromIdx) {
+        for (var i = fromIdx; i < arr.length - 2; i++) {
+          if (arr[i].high < arr[i + 2].low) return true;
+        }
+        return false;
+      }
+      function hasBearFVG(arr, fromIdx) {
+        for (var i = fromIdx; i < arr.length - 2; i++) {
+          if (arr[i].low > arr[i + 2].high) return true;
+        }
+        return false;
+      }
+
+      function bullDisplacement(arr, fromIdx) {
+        var avg = avgBody(arr, Math.max(0, fromIdx - 8), fromIdx) || 0.0001;
+        for (var i = fromIdx; i < arr.length; i++) {
+          var body = arr[i].close - arr[i].open;
+          if (body > avg * 1.8) return true;
+        }
+        return false;
+      }
+      function bearDisplacement(arr, fromIdx) {
+        var avg = avgBody(arr, Math.max(0, fromIdx - 8), fromIdx) || 0.0001;
+        for (var i = fromIdx; i < arr.length; i++) {
+          var body = arr[i].open - arr[i].close;
+          if (body > avg * 1.8) return true;
+        }
+        return false;
+      }
+
+      function brokeAbove(arr, fromIdx, level) {
+        for (var i = fromIdx; i < arr.length; i++) if (arr[i].close > level) return true;
+        return false;
+      }
+      function brokeBelow(arr, fromIdx, level) {
+        for (var i = fromIdx; i < arr.length; i++) if (arr[i].close < level) return true;
+        return false;
+      }
+
+      var confirm = 'none';
+      var detail = '';
+
+      if (swept === 'low' && sweepLowIdx >= 0) {
+        var preHigh = -Infinity;
+        for (var p = Math.max(0, sweepLowIdx - 5); p < sweepLowIdx; p++) {
+          if (post[p].high > preHigh) preHigh = post[p].high;
+        }
+        if (preHigh === -Infinity && sweepLowIdx > 0) preHigh = post[sweepLowIdx - 1].high;
+        var disp = bullDisplacement(post, sweepLowIdx);
+        var fvg = hasBullFVG(post, sweepLowIdx);
+        var bos = preHigh > -Infinity && brokeAbove(post, sweepLowIdx, preHigh);
+        if (disp && fvg && bos) { confirm = 'strong'; detail = 'Sweep low + displacement + FVG + structure break'; }
+        else if ((disp || fvg) && bos) { confirm = 'bos'; detail = 'Sweep low + BOS/FVG'; }
+        else if (disp || fvg || bos) { confirm = 'mss'; detail = 'Sweep low + early structure shift'; }
+        else { confirm = 'none'; detail = 'Sweep of Asian Low detected – waiting for structure'; }
+      } else if (swept === 'high' && sweepHighIdx >= 0) {
+        var preLow = Infinity;
+        for (var q = Math.max(0, sweepHighIdx - 5); q < sweepHighIdx; q++) {
+          if (post[q].low < preLow) preLow = post[q].low;
+        }
+        if (preLow === Infinity && sweepHighIdx > 0) preLow = post[sweepHighIdx - 1].low;
+        var dispS = bearDisplacement(post, sweepHighIdx);
+        var fvgS = hasBearFVG(post, sweepHighIdx);
+        var bosS = preLow < Infinity && brokeBelow(post, sweepHighIdx, preLow);
+        if (dispS && fvgS && bosS) { confirm = 'strong'; detail = 'Sweep high + displacement + FVG + structure break'; }
+        else if ((dispS || fvgS) && bosS) { confirm = 'bos'; detail = 'Sweep high + BOS/FVG'; }
+        else if (dispS || fvgS || bosS) { confirm = 'mss'; detail = 'Sweep high + early structure shift'; }
+        else { confirm = 'none'; detail = 'Sweep of Asian High detected – waiting for structure'; }
+      } else if (swept === 'both') {
+        detail = 'Both sides swept – choppy / seek & destroy risk';
+      } else {
+        detail = 'No sweep of Asian range yet';
+      }
+
+      return { swept: swept, confirm: confirm, detail: detail, postBars: post.length };
+    }
+
     async function loadAsianRange() {
       const pair = document.getElementById('asian-pair-select').value;
       const highEl = document.getElementById('asian-high');
@@ -1256,104 +1388,123 @@
       rangeEl.textContent = '—';
 
       try {
-        // 15min bars – enough history for Asian session (00:00–08:00 London)
-        const url = `https://api.twelvedata.com/time_series?symbol=${encodeURIComponent(pair)}&interval=15min&outputsize=120&apikey=${TWELVE_DATA_KEY}`;
-        const res = await fetch(url);
+        const url = 'https://api.twelvedata.com/time_series?symbol=' + encodeURIComponent(pair) + '&interval=15min&outputsize=100&apikey=' + TWELVE_DATA_KEY;
+
+        const controller = new AbortController();
+        const timeoutId = setTimeout(function() { controller.abort(); }, 15000);
+
+        const res = await fetch(url, { signal: controller.signal, cache: 'no-store' });
+        clearTimeout(timeoutId);
+
+        if (!res.ok) {
+          statusEl.textContent = 'HTTP ' + res.status + ' – try again later';
+          return;
+        }
+
         const data = await res.json();
 
-        // Handle API errors (rate limit, invalid key, etc.)
-        if (data.status === 'error' || data.code || !data.values) {
-          const msg = data.message || data.code || 'No data returned';
-          statusEl.textContent = String(msg).slice(0, 60);
-          console.warn('Twelve Data error:', data);
+        if (data.status === 'error' || data.code) {
+          const msg = data.message || ('Error ' + data.code);
+          statusEl.textContent = String(msg).slice(0, 70);
           return;
         }
 
-        if (!data.values.length) {
-          statusEl.textContent = 'No bars in response';
+        if (!data.values || !data.values.length) {
+          statusEl.textContent = 'No bars returned (API limit?)';
           return;
         }
 
-        // Parse each bar into London local hour using Intl (reliable on mobile)
-        const fmtHour = new Intl.DateTimeFormat('en-GB', {
-          timeZone: 'Europe/London',
-          hour: 'numeric',
-          hour12: false
-        });
-        const fmtDay = new Intl.DateTimeFormat('en-CA', {
-          timeZone: 'Europe/London',
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit'
-        });
+        function londonParts(isoLike) {
+          var s = String(isoLike).replace(' ', 'T');
+          if (s.indexOf('Z') === -1) s += 'Z';
+          var dt = new Date(s);
+          var parts = new Intl.DateTimeFormat('en-GB', {
+            timeZone: 'Europe/London',
+            year: 'numeric', month: '2-digit', day: '2-digit',
+            hour: '2-digit', hour12: false
+          }).formatToParts(dt);
+          function get(t) {
+            for (var i = 0; i < parts.length; i++) if (parts[i].type === t) return parts[i].value;
+            return '0';
+          }
+          var hour = parseInt(get('hour'), 10);
+          if (hour === 24) hour = 0;
+          var dayKey = get('year') + '-' + get('month') + '-' + get('day');
+          return { hour: hour, dayKey: dayKey };
+        }
 
-        const bars = data.values.map(b => {
-          // Twelve Data forex timestamps are UTC
-          const dt = new Date(b.datetime.replace(' ', 'T') + 'Z');
-          const hourParts = fmtHour.formatToParts(dt);
-          const hour = parseInt(hourParts.find(p => p.type === 'hour').value, 10);
-          const dayKey = fmtDay.format(dt); // YYYY-MM-DD
-          return {
-            high: parseFloat(b.high),
-            low: parseFloat(b.low),
-            datetime: b.datetime,
-            londonHour: hour === 24 ? 0 : hour,
-            dayKey
-          };
-        });
+        // API returns newest first → reverse to chronological
+        var bars = [];
+        for (var i = data.values.length - 1; i >= 0; i--) {
+          var b = data.values[i];
+          try {
+            var lp = londonParts(b.datetime);
+            bars.push({
+              open: parseFloat(b.open),
+              high: parseFloat(b.high),
+              low: parseFloat(b.low),
+              close: parseFloat(b.close),
+              datetime: b.datetime,
+              londonHour: lp.hour,
+              dayKey: lp.dayKey
+            });
+          } catch (e) {}
+        }
 
-        // Asian session: 00:00 – 08:00 London
-        const asianBars = bars.filter(b => b.londonHour >= 0 && b.londonHour < 8);
-
-        if (asianBars.length === 0) {
-          statusEl.textContent = 'No Asian session bars (try later)';
+        var asianBars = bars.filter(function(b) { return b.londonHour >= 0 && b.londonHour < 8; });
+        if (!asianBars.length) {
+          statusEl.textContent = 'No Asian bars in last data – try later';
           return;
         }
 
-        // Most recent London calendar day that has Asian bars
-        const byDay = {};
-        asianBars.forEach(b => {
+        var byDay = {};
+        asianBars.forEach(function(b) {
           if (!byDay[b.dayKey]) byDay[b.dayKey] = [];
           byDay[b.dayKey].push(b);
         });
-        const days = Object.keys(byDay).sort().reverse();
-        const latestDay = days[0];
-        const sessionBars = byDay[latestDay];
+        var days = Object.keys(byDay).sort().reverse();
+        var latestDay = days[0];
+        var sessionBars = byDay[latestDay];
 
-        let asiaHigh = -Infinity;
-        let asiaLow = Infinity;
-        let highTime = '';
-        let lowTime = '';
-
-        sessionBars.forEach(b => {
+        var asiaHigh = -Infinity, asiaLow = Infinity, highTime = '', lowTime = '';
+        sessionBars.forEach(function(b) {
           if (b.high > asiaHigh) { asiaHigh = b.high; highTime = b.datetime; }
           if (b.low < asiaLow) { asiaLow = b.low; lowTime = b.datetime; }
         });
 
-        const decimals = pair.includes('JPY') ? 3 : (pair.includes('XAU') ? 2 : 5);
+        var decimals = pair.indexOf('JPY') !== -1 ? 3 : (pair.indexOf('XAU') !== -1 ? 2 : 5);
         highEl.textContent = asiaHigh.toFixed(decimals);
         lowEl.textContent = asiaLow.toFixed(decimals);
         highTimeEl.textContent = highTime ? highTime.slice(0, 16) : '';
         lowTimeEl.textContent = lowTime ? lowTime.slice(0, 16) : '';
+        rangeEl.textContent = (asiaHigh - asiaLow).toFixed(decimals);
 
-        const range = asiaHigh - asiaLow;
-        rangeEl.textContent = range.toFixed(decimals);
-        statusEl.textContent = `${latestDay} · ${sessionBars.length} bars`;
+        // Auto detect sweep + structure
+        var detection = detectSweepAndStructure(bars, asiaHigh, asiaLow, latestDay);
+        statusEl.textContent = latestDay + ' · ' + detection.detail;
 
         window.currentAsianRange = {
-          pair: pair,
-          high: asiaHigh,
-          low: asiaLow,
-          range: range,
-          day: latestDay
+          pair: pair, high: asiaHigh, low: asiaLow,
+          range: asiaHigh - asiaLow, day: latestDay,
+          swept: detection.swept, confirm: detection.confirm, detail: detection.detail
         };
 
-        // Auto-fill Signal Tool so you don't type levels
-        fillSignalTool(true);
+        try {
+          fillSignalTool(true);
+          // Auto-set sweep & confirmation
+          document.getElementById('swept').value = detection.swept;
+          document.getElementById('confirm').value = detection.confirm;
+          // Auto-generate call
+          generateSignal();
+        } catch (e) { console.warn(e); }
 
       } catch (err) {
-        console.error(err);
-        statusEl.textContent = 'Network error – check connection';
+        console.error('Asian range error:', err);
+        if (err && err.name === 'AbortError') {
+          statusEl.textContent = 'Timeout – slow network, try again';
+        } else {
+          statusEl.textContent = String((err && err.message) || 'Network error').slice(0, 60);
+        }
       }
     }
 
@@ -1750,7 +1901,7 @@ Risk: Always use proper risk management. This is educational only.`;
       document.getElementById('call-tp1').textContent = '—';
       document.getElementById('call-confidence').textContent = '—';
       document.getElementById('call-score-sub').textContent = 'Score / 7';
-      document.getElementById('call-notes').innerHTML = 'Fill Asian High/Low in the Signal Tool, select sweep + confirmation, then tap <strong>Generate Signal Assessment</strong>. The call above will update automatically.';
+      document.getElementById('call-notes').innerHTML = 'Tap <strong>Refresh Asian Range</strong> — levels, sweep, and structure are detected automatically and the Call updates. You can still override the dropdowns manually.';
       document.getElementById('copy-call-btn').style.display = 'none';
       window.lastCallText = '';
     }
@@ -1817,20 +1968,36 @@ Risk: Always use proper risk management. This is educational only.`;
     // Initial chart – London timezone by default
     loadChart('FX:EURUSD', 'Europe/London');
 
-    // Fix nav links on mobile – scroll with offset for sticky header
-    document.querySelectorAll('nav a[href^="#"]').forEach(link => {
+    // Tab navigation – show only the selected section
+    function showSection(id) {
+      var sections = document.querySelectorAll('main > section');
+      sections.forEach(function(sec) { sec.classList.remove('active-section'); });
+      // Call tab also shows Asian Range
+      if (id === 'call') {
+        var asian = document.getElementById('asian-range');
+        var call = document.getElementById('call');
+        if (asian) asian.classList.add('active-section');
+        if (call) call.classList.add('active-section');
+      } else {
+        var target = document.getElementById(id);
+        if (target) target.classList.add('active-section');
+      }
+      document.querySelectorAll('nav a[href^="#"]').forEach(function(a) {
+        a.classList.toggle('active', a.getAttribute('href') === '#' + id);
+      });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    document.querySelectorAll('nav a[href^="#"]').forEach(function(link) {
       link.addEventListener('click', function(e) {
-        const targetId = this.getAttribute('href').slice(1);
-        const target = document.getElementById(targetId);
-        if (target) {
-          e.preventDefault();
-          const headerOffset = 70;
-          const elementPosition = target.getBoundingClientRect().top;
-          const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-          window.scrollTo({
-            top: offsetPosition,
-            behavior: 'smooth'
-          });
+        e.preventDefault();
+        var targetId = this.getAttribute('href').slice(1);
+        showSection(targetId);
+      });
+    });
+
+    // Default tab
+    showSection('status');
         }
       });
     });
